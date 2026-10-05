@@ -35,9 +35,19 @@ def test_every_tier_is_represented(db_session):
     assert data["tier1_users"] + data["tier2_users"] + data["tier3_users"] == data["users"]
 
 
+#: Other test modules create their own drivers on ``@parkwise.test`` to exercise
+#: the engine, and some of those deliberately hold two active vehicles. These
+#: invariants are about the *seeded* population, so they are scoped to it.
+SEEDED_EMAIL_SUFFIX = "@parkwise.edu"
+
+
+def _seeded_users(db) -> list:
+    return db.scalars(select(User).where(User.email.endswith(SEEDED_EMAIL_SUFFIX))).all()
+
+
 def test_users_have_between_one_and_three_vehicles(db_session):
     db = db_session
-    for user in db.scalars(select(User)):
+    for user in _seeded_users(db):
         count = db.scalar(
             select(func.count(Vehicle.id)).where(Vehicle.user_id == user.id)
         )
@@ -46,11 +56,11 @@ def test_users_have_between_one_and_three_vehicles(db_session):
 
 def test_only_one_vehicle_is_active_per_user(db_session):
     db = db_session
-    for user in db.scalars(select(User)):
+    for user in _seeded_users(db):
         active = db.scalars(
             select(Vehicle).where(Vehicle.user_id == user.id, Vehicle.active_today.is_(True))
         ).all()
-        assert len(active) <= 1, f"user {user.email} has {len(active)} active vehicles"
+        assert len(active) == 1, f"user {user.email} has {len(active)} active vehicles"
 
 
 def test_bays_reference_real_lots_and_buildings(db_session):
