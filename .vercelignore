@@ -1,0 +1,9 @@
+backend/tests
+backend/.venv
+node_modules
+frontend/node_modules
+frontend/dist
+hardware
+firmware
+edge_agent
+*.db

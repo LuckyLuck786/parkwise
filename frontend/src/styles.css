@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-slate-100 text-slate-900 antialiased;
+  }
+  /* Never rely on colour alone: a visible focus ring on everything focusable. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-campus-600 ring-offset-2;
+  }
+}
+
+@media (prefers-contrast: more) {
+  body {
+    @apply bg-white text-black;
+  }
+}

@@ -1,0 +1,20 @@
+# ---------------------------------------------------------------------------
+# ParkWise - deployed Python bundle (Vercel function)
+#
+# Kept deliberately small so the bundle stays far under the 250 MB ceiling:
+# no computer-vision runtime here. The edge agent that talks to a webcam runs
+# on the laptop and posts normalized events to the API, so this function never
+# needs OpenCV or a detector.
+# ---------------------------------------------------------------------------
+fastapi==0.115.6
+pydantic==2.10.4
+pydantic-settings==2.7.0
+python-multipart==0.0.20
+PyJWT==2.10.1
+
+# Persistence: hosted Postgres (Neon) via psycopg binary wheel.
+SQLAlchemy==2.0.36
+psycopg[binary]==3.2.3
+
+# Outbound calls for the smoke test and the optional Telegram channel.
+httpx==0.28.1
